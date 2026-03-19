@@ -1,74 +1,158 @@
-# React + TypeScript + Vite
+# Profil Tim Project
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+README ini dibuat supaya anggota kelompok paham alur project, tahu flow kode yang ada di folder `src`, dan tahu bagian mana yang cukup diisi kontennya saja.
 
-Currently, two official plugins are available:
+## Tujuan Project
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Project ini adalah website profil anggota kelompok.
 
-## React Compiler
+Flow umumnya seperti ini:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+1. Halaman utama menampilkan daftar anggota tim.
+2. Saat nama anggota dipilih, user masuk ke halaman detail profil anggota.
+3. Semua data anggota diambil dari 1 file pusat, jadi teman-teman cukup isi data di sana.
 
-## Expanding the ESLint configuration
+## Flow Kode Di `src`
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Urutan alur project dari awal sampai tampil di browser:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+1. `src/main.tsx`
+   File entry point React. Di sini app dijalankan dan dibungkus dengan `BrowserRouter` supaya routing bisa dipakai.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+2. `src/App.tsx`
+   File utama untuk route dan halaman home.
+   Di sini ada:
+   - route `/` untuk halaman utama
+   - route `/anggota/:name` untuk halaman detail anggota
+   - tampilan daftar anggota yang dibuat dari data `members`
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+3. `src/data/members.ts`
+   Ini sumber data utama semua anggota.
+   Data di file ini dipakai untuk:
+   - card anggota di halaman home
+   - halaman detail profil masing-masing anggota
+
+4. `src/pages/Anggota.tsx`
+   File ini membaca parameter URL `:name`, lalu mencocokkan dengan data anggota dari `memberMap`.
+   Setelah cocok, halaman ini menampilkan:
+   - foto
+   - nama
+   - NIM
+   - kelas
+   - jurusan
+   - domisili
+   - tagline
+   - deskripsi diri
+
+5. `src/index.css`
+   File ini memanggil Tailwind CSS supaya styling project aktif.
+
+## Hubungan Antar File
+
+Supaya gampang dipahami, alurnya begini:
+
+`main.tsx` -> menjalankan app
+
+`App.tsx` -> menampilkan halaman utama + route ke detail anggota
+
+`members.ts` -> menyimpan data semua anggota
+
+`Anggota.tsx` -> mengambil data anggota berdasarkan `slug` dari URL lalu menampilkannya
+
+Jadi pusat isi kontennya ada di `src/data/members.ts`.
+
+## File Yang Perlu Diisi Teman Kelompok
+
+Kalau teman-teman kelompok hanya mau isi konten, fokus ke dua tempat ini saja:
+
+- `src/data/members.ts`
+- `src/assets/`
+
+Artinya:
+
+- foto anggota ditaruh di `src/assets/`
+- data profil anggota diisi di `src/data/members.ts`
+
+## Cara Pakai Untuk Kelompok
+
+### 1. Jalankan project
+
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 2. Tambah foto anggota
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Simpan foto anggota ke folder:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+src/assets/
 ```
 
+### 3. Import foto di `src/data/members.ts`
+
+Contoh:
+
+```ts
+import fotoBudi from "../assets/budi.jpg";
+```
+
+### 4. Isi object anggota di array `members`
+
+Contoh bentuk data:
+
+```ts
+{
+  slug: "budi-santoso",
+  nama: "Budi Santoso",
+  nim: "123456789",
+  kelas: "T2D",
+  jurusan: "Teknologi Informasi",
+  domisili: "Malang",
+  tagline: "Suka belajar hal baru di dunia teknologi.",
+  about: "Isi deskripsi lengkap tentang anggota di sini.",
+  image: fotoBudi,
+}
+```
+
+## Arti Tiap Bagian Data
+
+- `slug`: id unik untuk URL, pakai huruf kecil dan tanda `-`
+- `nama`: nama lengkap anggota
+- `nim`: NIM anggota
+- `kelas`: kelas anggota
+- `jurusan`: jurusan atau prodi
+- `domisili`: asal / tempat tinggal
+- `tagline`: kalimat singkat profil
+- `about`: deskripsi lengkap anggota
+- `image`: foto yang sudah di-import
+
+## Cara Kerja Saat Menambah Anggota
+
+Kalau kalian menambah 1 object baru di `members`, maka:
+
+1. nama anggota otomatis muncul di halaman home
+2. link ke halaman detail anggota otomatis ikut dibuat
+3. halaman detail akan mengambil data berdasarkan `slug`
+
+Jadi tidak perlu membuat halaman baru satu per satu.
+
+## Catatan Penting
+
+- `slug` setiap anggota harus berbeda
+- nama file foto lebih baik dibuat singkat dan rapi
+- kalau hanya isi konten, tidak perlu ubah file config
+- kalau ingin aman, cukup edit `src/data/members.ts` dan tambahkan foto di `src/assets/`
+
+## Singkatnya
+
+Kalau teman kelompokmu bingung, kasih tahu seperti ini:
+
+1. jalanin project pakai `npm run dev`
+2. taruh foto di `src/assets`
+3. buka `src/data/members.ts`
+4. copy data anggota yang sudah ada
+5. ganti isinya dengan data masing-masing
+
+Sisanya akan mengikuti flow project yang sudah ada.
