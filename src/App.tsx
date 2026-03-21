@@ -1,11 +1,15 @@
-import { Routes, Route } from "react-router-dom";
-import Arva from "./pages/arva.tsx";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Arva from "./pages/Arva";
+import Rohan from './pages/Rohan';
 
 function App() {
   return (
-    <Routes>
-      <Route path="/arva" element={<Arva />} />
-    </Routes>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/arva" element={<Arva />} />
+        <Route path="/rohan" element={<Rohan />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
